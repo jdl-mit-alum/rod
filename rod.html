@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH -->
+<head>
+
+  <!-- 11111111111111111111111111111111111111111111111111111111111111111111 -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- 22222222222222222222222222222222222222222222222222222222222222222222 -->
+  <title>Rod Photoreceptor Dynamic Model</title>
+
+  <!-- 33333333333333333333333333333333333333333333333333333333333333333333 -->
+  <link
+    rel="stylesheet"
+    href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+  <link
+    href="rod.css"
+    rel="stylesheet"
+    type="text/css">
+
+  <!-- 44444444444444444444444444444444444444444444444444444444444444444444 -->
+  <script
+    src="http://code.jquery.com/jquery-1.10.2.min.js">
+  </script>
+  <script
+    src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js">
+  </script>
+  <script
+    type="text/javascript"
+    async
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+
+  <script type="text/javascript" src="sketch.js"></script>
+  <!-- 55555555555555555555555555555555555555555555555555555555555555555555 -->
+  <script type="text/javascript" src="service.js"></script>
+  <script type="text/javascript" src="wiki.js"></script>
+  <script type="text/javascript" src="plot.js"></script>
+  <script type="text/javascript" src="rod.js"></script>
+
+</head>
+<!-- HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH -->
+
+<!-- BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB -->
+<body id="body">
+
+<div data-role="page" id="page1">
+  <!-- aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa -->
+  <div align="center">
+    <img id="photoreceptor" src="rod.gif" width="100%"></img><br />
+  </div>
+  <div id="model-div">
+    <table width="100%" id="model-table" border="0">
+      <tr>
+        <td>&nbsp;</td>
+        <td id="A">&nbsp;</td>
+        <td id="B">&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb -->
+  <div data-role="header">
+    <table width="100%">
+      <tr>
+        <td id="title">
+          <big>rod photoreceptor outer segment square wave dynamic response</big>
+        </td>
+      </tr>
+      <tr>
+        <td id="legal">
+          <small><small>
+              Copyright(c)2016 Jonathan D. Lettvin, All Rights Reserved
+          </small></small>
+        </td>
+      </tr>
+    </table>
+    <table id="choices" width="100%" class="choices">
+      <tr>
+        <td>&nbsp;</td>
+        <td id="restart" class="choice"
+          width="20%"
+          style="color: black; background-color: #DDDDDD">
+<pre>click to
+RESTART
+&Phi; 4.1-6.5
+otherwise
+photopic</pre>
+        </td>
+        <td>&nbsp;</td>
+        <td id="photopic" class="choice"
+          width="20%"
+          style="color: black; background-color: #CCCCCC">
+<pre>click for
+Photopic
+&Phi; 3.6-6
+dwell/&lambda;: 1s/2s
+1 &frac12;-used disk</pre>
+        </td>
+        <td>&nbsp;</td>
+        <td id="scotopic" class="choice"
+          width="20%"
+          style="color: white; background-color: #555555">
+<pre>click for
+Scotopic
+&Phi; 0-2.4
+dwell/&lambda;: 1s/2s
+500 &frac12;-used disks</pre>
+        </td>
+        <td>&nbsp;</td>
+        <td id="fulldark" class="choice"
+          width="20%"
+          style="color: white; background-color: #000000">
+<pre>click for
+Dark Adapted
+&Phi; 0-2.4
+dwell/&lambda;: 1s/2s
+1000 unused disk</pre>
+        </td>
+        <td>&nbsp;</td>
+        <td id="pause" class="choice"
+          width="20%"
+          style="color: black; background-color: #FFCCCC">
+<pre>click to
+PAUSE
+affects
+Model/Graphing
+(energy saving)</pre>
+        </td>
+        <td>&nbsp;</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- http://www.electronics-tutorials.ws/waveforms/waveforms.html -->
+  <!-- Search for A Square Wave Waveform -->
+  <!-- http://demos.jquerymobile.com/1.4.5/rangeslider/ -->
+
+  <!-- cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc -->
+  <div class="ui-field-contain">
+    <div data-role="rangeslider" data-mini="true" data-track-theme="a" data-theme="b" id="timing">
+      <label  for="pulse-width">msec dwell/&lambda;</label>
+      <input name="pulse-width" id="pulse-width" min="20" max="10000" step="20" value="1000" type="range">
+      <label  for="pulse-period">msec dwell/&lambda;</label>
+      <input name="pulse-period" id="pulse-period" min="20" max="10000" step="20" value="2000" type="range">
+    </div>
+  </div>
+
+  <!-- dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd -->
+  <div class="ui-field-contain">
+    <div data-role="rangeslider" data-mini="true" data-track-theme="a" data-theme="b" id="photons">
+      <label  for="photons-lo">\(I = 10^{\Phi}-1\)</label>
+      <input name="photons-lo" id="photons-lo" min="0" max="8" step="0.1" value="2.0" type="range">
+      <label  for="photons-hi">\(I = 10^{\Phi}-1\)</label>
+      <input name="photons-hi" id="photons-hi" min="0" max="8" step="0.1" value="8.0" type="range">
+    </div>
+  </div>
+
+  <!-- eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee -->
+  <canvas id="plotFrame" width="100%" height="101px"></canvas>
+
+  <!-- ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff -->
+  <!-- Note: help uses the homegrown wiki markdown in wiki.js -->
+  <table border="1" width="100%"><tr>
+    <td id="TODO">TODO</td>
+    <td id="instant_help">HELP</td>
+    <td id="references">REFERENCES</td>
+  </tr></table>
+  <div id="doc"></div>
+  <table hidden="true">
+    <tr hidden="true"><td id="help_photoreceptor">
+=== Rod Photoreceptor Anatomy ===
+This is a fairly typical sketch of a photoreceptor.
+This model ignores everything from the foot to the inner segment.
+The outersegment has a stack of opsin-studded disks.
+Disks and opsins are generated active by the inner segment to the left.
+Opsins that capture a photon become latent (inactive between 10-45 minutes).
+Disks and opsins are bitten of and recycled by phagocytosis to the right.
+Photons are captured and opsins become more latent along the outer segment.
+The outer segment acts as a conveyor belt of active opsins.
+The outer segment becomes shorter in brighter light.
+    </td></tr>
+    <tr hidden="true"><td id="help_model-div"    >
+=== Abstract view of opsin disposition ===
+The rod interface enables testing of photoreceptor responses to light.
+Underneath the image is an abstract view of opsins in the outer segment.
+The black/gray/white left end is the working length subject to photons.
+The pink right end is missing rod length due to phagocytosis.
+Watch lengths and working length color change as &Phi; and wave change.
+    </td></tr>
+    <tr hidden="true"><td id="help_title"        >
+=== About this demonstration ===
+When a photon is absorped
+an opsin converts from active (11-cis) to latent (all-trans)
+and does not recover for between 10 and 45 minutes.
+Active opsins will be total opsins minus latent opsins.
+---
+Phagocytosis reduces rod length by biting off its end.
+This reduces the maximum available opsin count
+substantially reducing the probability of photon capture
+in proportion to, at best the ratio of current length to maximum length.
+Used opsins do not absorb photons but remain in the rod.
+The actual photon capture probability is:
+$$Probability_{capture}=\frac{Opsin_{current} - Opsin_{latent}}{O_{maximum}}$$
+Phagocytosis consumes a proportion of active and latent opsins.
+Disk generation by the inner segment produces all active opsins.
+    </td></tr>
+    <tr hidden="true"><td id="help_legal"        >
+=== Legal Ownership ===
+This model and application are original works and
+the author requests that re-use should be accompanied by attribution.
+    </td></tr>
+    <tr hidden="true"><td id="help_restart"      >
+=== Set all values as they were at program start ===
+    </td></tr>
+    <tr hidden="true"><td id="help_photopic"     >
+=== Set initial values for bright light ===
+Opsin counts and proportions are set for high photon flux.
+The square wave intensity is set to between \(10^{3.6}\) and \(10^{6}\).
+Activity and the plot exhibit a non-realistic discontinuity when changed.
+This models expectations of reduced photon capture in medium bright light.
+    </td></tr>
+    <tr hidden="true"><td id="help_scotopic"     >
+=== Set initial values for dim light ===
+Opsin counts and proportions are set for low photon flux.
+The square wave intensity is set to between \(10^{0}\) and \(10^{2.4}\).
+Activity and the plot exhibit a non-realistic discontinuity when changed.
+This models expectations of enhanced photon capture in low light.
+    </td></tr>
+    <tr hidden="true"><td id="help_fulldark"     >
+=== Set initial values for 5 day dark adaptation ===
+Opsin counts and proportions are set for low photon flux.
+The square wave intensity is set to between \(10^{0}\) and \(10^{2.4}\).
+Activity and the plot exhibit a non-realistic discontinuity when changed.
+This models expectations of single-photon capture
+after dark adaptation in a cave for 5 days (See Selig Hecht).
+    </td></tr>
+    <tr hidden="true"><td id="help_pause"        >
+=== Pause/Resume Toggle ===
+Clicking on the plot has the same effect.
+Both pause/resume the refresh clock;
+    </td></tr>
+    <tr hidden="true"><td id="help_timing"       >
+!=Dwell/&lambda; Pulse width and period controls:=!^^
+    </td></tr>
+    <tr hidden="true"><td id="help_photons"      >
+=== &Phi; Photon count per second controls ===
+Photon intensity is created as a square wave with
+a lower and higher photon count.
+This control uses the log of the intended intensity (&Phi;).
+    </td></tr>
+    <tr hidden="true"><td id="help_plotFrame"   >
+=== Dynamic Response Plot ===
+Most values are plotted on a logarithmic scale.
+The exception is the tanh plot with values between -1 and +1.
+Clicking on the plot has the same effect as the pause button.
+Both pause/resume the refresh clock;
+    </td></tr>
+    <tr hidden="true"><td id="help_TODO"          >
+=== TODO ===
+* correct phagocytosis/regeneration
+* correct signal generation
+* correct initializing opsins for &Phi;
+* refactor rangesliders
+* automate mousify to connect fields with instant help
+    </td></tr>
+    <tr hidden="true"><td id="help_doc"          >
+=== Instant Help ===
+Hovering over a field in this application
+Reveals documentation about the field
+in this display area.
+    </td></tr>
+    <tr hidden="true"><td id="help_references"          >
+=== References ===
+* ![rodfacts.html rod facts]!
+* ![http://webvision.med.utah.edu/book/part-ii-anatomy-and-physiology-of-the-retina/photoreceptors/ photoreceptors (webvision)]!
+* ![http://www.thefullwiki.org/Photoreceptor_cell photoreceptor cell (thefullwiki)]!
+* ![http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2839896/ renewal (webvision)]!
+* ![https://en.wikipedia.org/wiki/Disc_shedding disk shedding (wikipedia)]!
+* ![http://www.d.umn.edu/~jfitzake/Lectures/DMED/Vision/Retina/ReceptorPotential.html photoreceptor membrane potential]!
+* ![http://physiologyonline.physiology.org/content/22/4/279 rod-to-rod transmission of single-photon response]!
+* ![http://www.hedgefundsblog.com/article/621017657/physiology-of-vision-arrangements-of-rod-cone-cells-features-of-rhodopsin-opsin-cycle-involment-of-photoreceptor-mechanism-of-photoreceptor-activation-in-response-to-neurotransmitters-/ opsin cycle]!
+* ![https://www.quora.com/What-are-the-chemical-principles-of-the-photoreceptor chemical principles of photoreceptor]!
+* ![http://thebrain.mcgill.ca/flash/capsules/pdf_articles/anatomy_retina.pdf retinal anatomy (mcgill)]!
+; http://www.ronos.ro/en/curs-virtual-1.html
+; http://biologybizarre.blogspot.com/2013/05/mating-in-swallowtail-butterflies.html
+; http://www.oculist.net/downaton502/prof/ebook/duanes/pages/v8/v8c012.html
+    </td></tr>
+  </table>
+
+</div>
+
+</body>
+<!-- BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB -->
+
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH -->
+<head>
+
+  <!-- 11111111111111111111111111111111111111111111111111111111111111111111 -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- 22222222222222222222222222222222222222222222222222222222222222222222 -->
+  <title>Rod Photoreceptor Dynamic Model</title>
+
+  <script
+    src="http://code.jquery.com/jquery-1.10.2.min.js">
+  </script>
+  <script
+    src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js">
+  </script>
+  <script
+    type="text/javascript"
+    async
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+
+  <script type="text/javascript" src="service.js"></script>
+  <script type="text/javascript" src="wiki.js"></script>
+
+</head>
+<!-- HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH -->
+
+<!-- BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB -->
+<body id="body">
+
+<script type="text/javascript">
+(function(d,w) {
+ $(d).ready(function() {
+ var target = d.getElementById("visible");
+ var source = d.getElementById("hidden");
+ var text = source.innerHTML;
+ var mark = d.jlettvin.wiki.markdown(text);
+ target.innerHTML = mark;
+ });
+})(document, window);
+</script>
+
+<div id="visible">
+</div>
+<div hidden="true">
+  <p id="hidden">
+= System Model: Human Retinal Rod=
+=== Opsin Management for Contrast Invariance ===
+== Abstract ==
+Opsins are produced, bleached, recovered, and consumed in a queue.  Constant difference in opsin bleaching rates in response to constant ratio of photon flux results from managing queue operation rates as opsins respond to photons.  The requirements to establish numerical signal constancy for a given contrast boundary, and methods to model it from operations on rod constituents are shown.
+== Introduction ==
+Measurements and Observations
+A scene looks much the same as a scene grows brighter and darker.  We see objects as unchanging in constant spectrum ambient light whether the photon count is in the thousands, millions, or billions of photons per second.  Across a boundary, the ratio of photon counts reflected from two surfaces is perceived to have constant contrast.
+
+We will describe a simplified model of a human rod photoreceptor consistent with observed structure and operations having this property of contrast invariance within any 4 decades over the observed total rod dynamic range of about 11 decades expressed over Voltages from VE (-40 mV fully excited resting) in darkness to VI (-100 mV fully inhibited active) in bright light with a commonly accepted V0 (-70 mV) resting voltage in the photopic range.  It produces a current with a maximum in darkness and a minimum in very bright light.
+
+A rod is a photosensor acting as a circuit element generating an internal Voltage response between these two extremes to photon capture.  A rod is a tube of maximum length around 25 microns and diameter of around 1 micron.  This tube is filled with membrane disks having opsin molecules embedded and held at an angle for most efficient photon capture with the photosensitive bond stressed forming a trigger to be sprung when a photon arrives.  Each of the ~1,000 (1e3) ~0.25 micron thick disk has ~100,000 (1e5) opsins such that the entire fully dark adapted rod has ~100,000,000 (1e8) opsins.
+
+When the rod is biased properly, having adapted to the average photon flux in a scene, it is able to discriminate between ~1,000 to ~10,000 differences in flux along an apparently largely linear scale.  This discrimination remains functional as the eye adapts to varying average flux levels so that contrasts in low light appear the same as contrasts in high light.
+
+An opsin is a molecule having a potential photon capturing bond labelled 11-cis.  A photon capture converts this bond to trans in ~1e-12 seconds.  This capture is a quantum event amplified into production of ~1,000 cGMPs over ~0.1 (1e-1) seconds.  Each cGMP production may also be modeled as a quantum, and the production considered a sequence of Dirac delta signals having an average time interval between of ~1e-4 seconds.  Variations in time interval can be considered 2nd order and is left for future modeling.  The signal will be treated as a square wave of duration 0.1 second following a photon capture.  The signal generated when multiple photons are captured in a single rod is modeled as the superposition of square waves.
+
+In all likelihood, these waves should be considered subject to decay processes which would dictate a non-square wave profile, yet the 1st order effects will be unchanged from the square wave model.  Presence of cGMP is modelled as a pressure to inhibit (drive the rod to a more negative Voltage).  This Voltage has a maximum negative value approached as an exponential decay from equilibrium.  The Voltage also has a minimum negative value.
+
+The probability of photon capture by an opsin in a fully dark adapted rod is sufficiently close to 1.0 that we will adopt the convention that it is 1.0 over the 1e8 opsins.  This means that after a single opsin is bleached, the probability drops to 1.0-1e-8.  After n bleachings, with no other interference, the probability drops to 1.0-n*1e-8.  For N photons arriving in sequence, the probability of bleaching is the sum of the probabilities of each.
+PN=(1.0)+(1.0-1e-8) +(1.0-2e-8)+...+(1.0-(N-1)*1e-8) = N-n=0N(n-1)*1e-8
+This probability can be calculated without the sum as follows:
+PN =N-((N-1)*N/2)*1e-8=N-(N2-N)/2e8=N-5e-9*(N2-N)
+
+This probability based on the fully dark-adapted rod must be adjusted for both observed shortening and for already bleached opsins.  If O is the maximum count of opsins for a given rod length, and B is the amount bleached, then the amount of opsin available for bleaching becomes N/(B-O) and the equation must be modified to:
+PN =(N/(B-O))*(N-5e-9*(N2-N))
+
+This equation gives the probability of capture on a time interval given a starting condition where the rod is shortened and opsins have been bleached.
+
+Since recovery takes ~600 seconds the probability of capture decreases over time.  For 1e8 photons, the overall probability is 1e8 - (1e8-1)/2 or about half.  For 2e8 photons, all are captured.  At a rate of 1e6 photons/second (medium light), all opsins are bleached in 200 seconds.  This would make the rod useless unless other processes intervene.  Two other processes intervene; phagocytosis and regeneration.
+
+In phagocytosis, the outer end of the outer segment is eaten by a phagocyte, a cell in the RPE (Retinal Pigment Epithelium).  This is a process by which bleached opsins are removed when they will not recover in sufficient time to be used again.  This process removes as much as 10 disks per bite at the rate of 2.5 seconds per bite or ~0.4 disks/second.  Theoretically, at its maximum bite rate, the entire rod is consumed in ~2,500 seconds or ~40 minutes.
+
+In regeneration, the inner end of the outer segment is built by a process of disk creation where a new disk has the full complement of ~1e5 unbleached opsins in the absence of light.  As many as 1 disk every 10 seconds is produced.  Theoretically, at its maximum regeneration rate, the entire rod is produced in ~10,000 seconds or ~2.75 hours.
+
+Finally, as part of dark adaptation, when all other processes have stopped (bleaching, phagocytosis, and regeneration), recovery restores bleached opsins with a half-life of ~600 seconds.  Experimentally, this process does not finish for days (Selig Hecht).
+Analysis
+Observations at the extremes set limits on expected system operations.  In light levels below ~1e3 photons per second, it would take more than ~1e5 seconds to bleach all the opsins.  Phagocytosis and regeneration would likely be approximately equal at a rate of 1 disk every ~100 seconds for lower light levels, and rod length would remain close to ~1e3 disks.  In light levels above ~1e7 photons per second, it takes less than ~1e2 seconds to bleach all the opsins.  To account for observed rod shortening in brighter light, phagocytosis rate must increase above the regeneration rate.
+
+Vignette
+Construe pigment as a unit sphere 1 cm in diameter,.  Pigment is stored in a cubic box of edge length 47.  A box stores 100,000 pigments with a little wiggle room.  To give a physical feel to this, consider the pigment unit to be 1mm, then the box would be half a meter along the edge, like an everyday moving box.  Boxes are kept on a conveyor belt with room for 1,000 boxes.  The conveyor belt is in a windowless factory where the lights can be turned entirely off.
+
+A bar is fixed across the far end of the conveyor belt.  A box arriving at that end turns the conveyor belt off.  A pushing mechanism is present at the far end of the belt.  This pusher can push a box off the belt.  If there is no box to push, the mechanism moves towards the near end until there is a box.  If over 10,000 pigments get bleached during a second, that next box is pushed off.  This continues until no more than 10,000 pigments get bleached during a second.
+Boxes pushed off are immediately discarded.
+
+At the near end, boxes full of dark pigment are produced when no pigment gets bleached during a second.  If the room is dark, boxes are produced until boxes reach the pusher.  In the absence of 10,000 bleachings per second, when a box is pushed on, the pushing mechanism retreats a box size at a time to the far end.  When a new box cannot be pushed on, the producer stops producing boxes.
+
+Over a 4 day weekend with all light shut off, the conveyor belt grows to its maximum length of 1,000 transparent boxes and all the pigment in each box converts to its dark form.
+
+GOAL:
+After length regulation and feedback biasing
+A rod produces a constant change in cGMP production
+In response to a constant ratio of fluxes across a boundary.
+
+
+Pertinent numbers
+A fully dark adapted rod has
+* ~100,000,000 (1e8) opsins distributed over
+* ~1,000 (1e3) disks containing
+* ~100,000 (1e5) opsins per disk with
+* ~25 microns length and
+* ~1 micron diameter for its tubular shape and
+* ~0.025 microns per disk thickness
+A photon is captured by an opsin in
+* ~1e-12 seconds triggering release of
+* ~1,000 (1e3) cGMP over
+* ~0.1 seconds
+By converting its 11-cis bond to trans.
+In other words, in less than significant physiological time
+An opsin spontaneously converts to this form (as if a photon were captured) in
+* ~1e9 seconds (actually more like ~3e9)
+In other words, spontaneous sensing is more than significant physiological time
+A bleached opsin can be recovered in place in about
+* ~600 seconds (6e2) or about 10 minutes, more than significant physio time
+Rods stop growing when about
+* ~1,000 (1e3) disks occupy the rod
+Rods have a maximum growth rate of
+* ~10,000 (1e4) opsins per second to accomodate a contrast range of
+* ~10,000 (1e4) gray levels discrimination for a growth rate of
+* ~0.1 disks per second
+Rods are subject to phagocytosis (being eaten by the pigment epithelium at a rate of
+* ~10 disks per bite or
+* ~1,000,000 (1e6) opsins per bite with
+* ~0.01 micron maximum bite per second or about
+* ~2.5 seconds per disk or
+* ~0.4 disks per second
+
+== Methods ==
+
+== Results ==
+
+== Discussion ==
+
+== Acknowledgements ==
+
+== Literature ==
+
+** http://book.bionumbers.org/how-many-rhodopsin-molecules-are-in-a-rod-cell/
+** https://en.wikipedia.org/wiki/Rhodopsin
+** http://webvision.med.utah.edu/book/part-ii-anatomy-and-physiology-of-the-retina/photoreceptors/
+** http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3113600/
+** http://www.pnas.org/content/103/13/4930.full
+** https://en.wikipedia.org/wiki/Visual_phototransduction
+
+== Appendices ==
+
+$$e^{i\pi}+1 = 0$$
+
+</p> 
+</div>
+
+</body>
+<!-- BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB -->
+
+</html>
