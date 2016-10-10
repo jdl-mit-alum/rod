@@ -6,10 +6,10 @@
     //actualize("d.jlettvin.plot");
 
     d.jlettvin.plot.draw = function(canvasname, lines, shape) {
-        var axisWidth = shape.font.size + 5;
-        var halfWidth = axisWidth / 2;
+        var axisWidth   = shape.font.size + 5;
+        var halfWidth   = axisWidth / 2;
 
-        var plotWidth = shape.width;
+        var plotWidth  = shape.width;
         var plotHeight = shape.height;
         var plotMargin = shape.margin;
 
@@ -26,6 +26,7 @@
         // Fill frame basic color
         ctx.fillStyle = shape.frame.color;
         ctx.fillRect(0, 0, frameWidth, canvas.height);
+
         // Fill plot basic color
         ctx.fillStyle = shape.back.color;
         ctx.fillRect(plotMargin, plotMargin, plotWidth, plotHeight);
@@ -38,6 +39,7 @@
             ctx.lineTo(xLeft+x,yTop+plotHeight);
             ctx.stroke();
         }
+
         // Fill horizontal grid lines
         for (var y=0; y < plotHeight; y+=10) {
             ctx.strokeStyle = shape.grid.color;
@@ -71,15 +73,21 @@
                 ctx.lineTo(xAxis, yOffset);
                 ctx.stroke();
 
-                // Fill label
+                // Fill axis
                 ctx.save();
                 ctx.translate(xAxis, plotMargin + plotHeight / 2);
+                // Fill limits (apologies for manifest constants)
+                var dx = -18, dy = -9, dFont = -3;
+                var xo = 0.5 * plotHeight, yo = shape.font.size + dy;
+                var xp = -xo - dx, xn = +xo + dx;
                 ctx.rotate(Math.PI/2);
                 ctx.textAlign = "center";
+                ctx.font = "10px " + shape.font.face;
+                ctx.fillText(line.ymax.toExponential(1), xp, yo);
+                ctx.fillText(line.ymin.toExponential(1), xn, yo);
+                // Fill label
                 ctx.font = "" + shape.font.size + "px " + shape.font.face;
-                ctx.fillText(line.ymax, -plotHeight/2.5, shape.font.size);
-                ctx.fillText(line.label, 0, shape.font.size);
-                ctx.fillText(line.ymin, +plotHeight/2.5, shape.font.size);
+                ctx.fillText(line.label, 0, shape.font.size + dFont);
                 ctx.restore();
 
                 // Plot the data into the plot area offset to the right for insufficient
