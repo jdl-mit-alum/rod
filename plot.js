@@ -73,21 +73,26 @@
                 ctx.lineTo(xAxis, yOffset);
                 ctx.stroke();
 
-                // Fill axis
+                // Keep a copy of the way things are
                 ctx.save();
+                // Fill axis
                 ctx.translate(xAxis, plotMargin + plotHeight / 2);
-                // Fill limits (apologies for manifest constants)
+                // Calculate limits (apologies for manifest constants)
+                // TODO: fix calculations to keep values at edges of frame
                 var dx = -18, dy = -9, dFont = -3;
-                var xo = 0.5 * plotHeight, yo = shape.font.size + dy;
-                var xp = -xo - dx, xn = +xo + dx;
+                var xo = 0.5 * plotHeight, yAxis = shape.font.size + dy;
+                var xUpper = -xo - dx, xLower = +xo + dx;
+                // Turn everything sideways
                 ctx.rotate(Math.PI/2);
                 ctx.textAlign = "center";
-                ctx.font = "10px " + shape.font.face;
-                ctx.fillText(line.ymax.toExponential(1), xp, yo);
-                ctx.fillText(line.ymin.toExponential(1), xn, yo);
                 // Fill label
                 ctx.font = "" + shape.font.size + "px " + shape.font.face;
                 ctx.fillText(line.label, 0, shape.font.size + dFont);
+                // Fill limits (apologies for manifest constants)
+                ctx.font = "10px " + shape.font.face;
+                ctx.fillText(line.ymax.toExponential(1), xUpper, yAxis);
+                ctx.fillText(line.ymin.toExponential(1), xLower, yAxis);
+                // Put things back the way they were
                 ctx.restore();
 
                 // Plot the data into the plot area offset to the right for insufficient

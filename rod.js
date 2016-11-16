@@ -84,7 +84,8 @@ d.jlettvin.model = {
 };
 
 function generatePhotons(Phi) {
-    return parseInt(Math.max(0, parseInt(10**Phi - 1)));
+    //return parseInt(Math.max(0, parseInt(10**Phi - 1)));
+    return parseInt(Math.max(0, parseInt(math.pow(10, Phi) - 1)));
 }
 
 function generatePhi(photons) {
